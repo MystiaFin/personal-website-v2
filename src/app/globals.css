@@ -37,3 +37,18 @@
 .connection-btn:hover::before {
   opacity: 1;
 }
+
+.group::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #1a1b1c;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease-out;
+  z-index: 0;
+}
+
+.group:hover::before {
+  transform: scaleX(1);
+}

@@ -38,14 +38,24 @@ const ConnectionsList: Connection[] = [
   { name: "Email", icon: "/icons/mail.svg", url: "mailto:cytrsx01@gmail.com" },
 ];
 
-const ConnectionButton = ({ conn }: { conn: Connection }) => {
+const MobileConnectionButton = ({ conn }: { conn: Connection }) => {
   const btnRef = useRef<HTMLAnchorElement>(null);
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLAnchorElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const touch = e.touches[0];
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    if (btnRef.current) {
+      btnRef.current.style.setProperty("--x", `${x}px`);
+      btnRef.current.style.setProperty("--y", `${y}px`);
+    }
+  };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-
     if (btnRef.current) {
       btnRef.current.style.setProperty("--x", `${x}px`);
       btnRef.current.style.setProperty("--y", `${y}px`);
@@ -58,40 +68,39 @@ const ConnectionButton = ({ conn }: { conn: Connection }) => {
       href={conn.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="connection-btn flex flex-col justify-center items-center w-24 h-24 relative overflow-hidden rounded-sm"
+      className="connection-btn flex flex-col justify-center items-center w-20 h-20 relative overflow-hidden rounded-sm"
       onMouseMove={handleMouseMove}
+      onTouchStart={handleTouchStart}
     >
       <img
         src={conn.icon}
         alt={conn.name}
-        className="w-8 h-8 mb-1 relative z-10"
+        className="w-6 h-6 mb-1 relative z-10"
       />
-      <span className="text-sm relative z-10">{conn.name}</span>
+      <span className="text-xs relative z-10">{conn.name}</span>
     </a>
   );
 };
 
-export default function SideSection() {
-  const currentYear = new Date().getFullYear();
-
+export default function MobileSideSection() {
   return (
-    <main className="ml-5 mr-6 max-w-sm mt-5 border-r border-gray-900 sticky top-0">
+    <div className="mb-8 px-4">
       {/* Intro */}
-      <div className="ml-2">
-        <h2 className="text-2xl font-extralight">This is,</h2>
-        <h1 className="text-4xl font-light">MystiaFin</h1>
+      <div className="text-center mb-6 mt-48">
+        <h2 className="text-4xl font-extralight">This is,</h2>
+        <h1 className="text-6xl font-light">MystiaFin</h1>
       </div>
 
       {/* Divider */}
-      <div className="my-5 w-76 h-[1px] bg-black"></div>
+      <div className="my-6 w-full h-[1px] bg-black"></div>
 
       {/* Stacks */}
-      <div className="ml-2">
-        <p className="mb-4 text-md font-extralight">
+      <div className="mb-6 mt-80">
+        <p className="mb-4 text-md font-extralight text-center">
           Full-stack Web Developer. <br />
           Mostly with these stacks:
         </p>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 justify-center">
           {StacksList.map((stack) => (
             <StackIcons key={stack.name} name={stack.name} icon={stack.icon} />
           ))}
@@ -99,17 +108,18 @@ export default function SideSection() {
       </div>
 
       {/* Connections */}
-      <div className="ml-2 mt-8">
-        <h2 className="font-light text-lg mb-3">Connections:</h2>
-        <div className="flex bg-[#1A1B1C] w-48 rounded-sm">
-          <div className="grid grid-cols-2 mr-1 w-48">
-            {ConnectionsList.map((conn) => (
-              <ConnectionButton key={conn.name} conn={conn} />
-            ))}
+      <div className="mt-8 mb-80">
+        <h2 className="font-light text-lg mb-3 text-center">Connections:</h2>
+        <div className="flex justify-center">
+          <div className="bg-[#1A1B1C] rounded-sm p-1">
+            <div className="grid grid-cols-2 gap-1">
+              {ConnectionsList.map((conn) => (
+                <MobileConnectionButton key={conn.name} conn={conn} />
+              ))}
+            </div>
           </div>
         </div>
-        <p className="mt-6 text-sm text-gray-500">© {currentYear} MystiaFin</p>
       </div>
-    </main>
+    </div>
   );
 }
